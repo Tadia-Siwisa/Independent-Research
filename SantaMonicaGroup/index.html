@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santa Monica Group — Investment Ecosystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --charcoal: #0a0a0a;
+            --charcoal-mid: #121212;
+            --charcoal-light: #1a1a1a;
+            --white: #f5f5f5;
+            --white-dim: #a0a0a0;
+            --slate: #6b6b6b;
+            --warm-gold: #c9a84c;
+            --warm-gold-dim: rgba(201, 168, 76, 0.08);
+            --warm-gold-med: rgba(201, 168, 76, 0.15);
+            --warm-gold-bright: rgba(201, 168, 76, 0.3);
+            --border-subtle: rgba(255,255,255,0.04);
+            --border-hover: rgba(201, 168, 76, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--charcoal);
+            color: var(--white);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        /* ===== CINEMATIC OPENING ===== */
+        .opening-sequence {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #000;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .opening-sequence.complete {
+            animation: sequenceOut 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes sequenceOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
+        }
+
+        .seq-logo {
+            position: absolute;
+            opacity: 0;
+            transform: scale(0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .seq-logo svg {
+            width: 72px;
+            height: 72px;
+        }
+
+        .seq-logo-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .seq-logo.active {
+            animation: logoAppear 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes logoAppear {
+            0% { opacity: 0; transform: scale(0.85); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .seq-mission {
+            position: absolute;
+            opacity: 0;
+            text-align: center;
+            max-width: 520px;
+            padding: 0 24px;
+        }
+
+        .seq-mission p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.35rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--white-dim);
+            line-height: 1.7;
+            letter-spacing: 0.02em;
+        }
+
+        .seq-mission.active {
+            animation: missionAppear 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes missionAppear {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .seq-industries {
+            position: absolute;
+            width: 100%;
+            max-width: 1100px;
+            padding: 0 48px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            opacity: 0;
+        }
+
+        .seq-industries.active {
+            animation: industriesAppear 0.8s ease forwards;
+        }
+
+        @keyframes industriesAppear {
+            to { opacity: 1; }
+        }
+
+        .seq-industry {
+            border-top: 1px solid var(--border-subtle);
+            padding: 0;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.6s ease,
+                        padding 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .seq-industry.open {
+            max-height: 400px;
+            opacity: 1;
+            padding: 24px 0;
+        }
+
+        .seq-industry-name {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--warm-gold);
+            margin-bottom: 16px;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+        }
+
+        .seq-industry.open .seq-industry-name {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .seq-companies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease 0.4s, transform 0.5s ease 0.4s;
+        }
+
+        .seq-industry.open .seq-companies {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .seq-company-tag {
+            padding: 8px 18px;
+            border: 1px solid rgba(201, 168, 76, 0.2);
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--white-dim);
+            letter-spacing: 0.05em;
+            background: rgba(201, 168, 76, 0.03);
+        }
+
+        /* ===== MAIN SITE ===== */
+        .main-site {
+            opacity: 0;
+            transition: opacity 1s ease 0.3s;
+        }
+
+        .main-site.visible {
+            opacity: 1;
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 24px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.5s ease, backdrop-filter 0.5s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .nav-logo svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .nav-logo span {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--slate);
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            transition: color 0.4s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--warm-gold);
+            transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .nav-links a:hover {
+            color: var(--white);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            padding: 9px 22px;
+            border: 1px solid var(--warm-gold);
+            color: var(--warm-gold);
+            text-decoration: none;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+        }
+
+        .nav-cta:hover {
+            background: var(--warm-gold);
+            color: var(--charcoal);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 48px 80px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(201, 168, 76, 0.025) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(201, 168, 76, 0.015) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-label {
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.45em;
+            text-transform: uppercase;
+            color: var(--warm-gold);
+            margin-bottom: 32px;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.4rem, 5vw, 4.5rem);
+            font-weight: 300;
+            line-height: 1.1;
+            max-width: 800px;
+            margin-bottom: 28px;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--warm-gold);
+        }
+
+        .hero-mission {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--white-dim);
+            max-width: 520px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scroll-hint span {
+            font-size: 0.6rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--slate);
+        }
+
+        .scroll-hint .line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--warm-gold), transparent);
+            animation: scrollPulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.2; transform: scaleY(0.5); }
+            50% { opacity: 0.8; transform: scaleY(1); }
+        }
+
+        /* ===== ECOSYSTEM DASHBOARD ===== */
+        .ecosystem {
+            padding: 0 48px 100px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .ecosystem-header {
+            text-align: center;
+            padding: 80px 0 60px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .ecosystem-header .section-label {
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.45em;
+            text-transform: uppercase;
+            color: var(--warm-gold);
+            margin-bottom: 18px;
+            display: block;
+        }
+
+        .ecosystem-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 300;
+            margin-bottom: 12px;
+        }
+
+        .ecosystem-header p {
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: var(--slate);
+            max-width: 460px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ===== UNIFIED ECOSYSTEM GRID ===== */
+        .ecosystem-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1px;
+            background: var(--border-subtle);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .ecosystem-column {
+            background: var(--charcoal-mid);
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+            grid-column: span 2;
+        }
+
+        .ecosystem-column.energy {
+            grid-column: 2 / span 2;
+        }
+
+        .ecosystem-column.property {
+            grid-column: 4 / span 2;
+        }
+
+        .column-header {
+            padding: 28px 28px 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+        }
+
+        .column-header h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--warm-gold);
+        }
+
+        .column-header .column-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border-subtle);
+        }
+
+        .column-header .column-count {
+            font-size: 0.6rem;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--slate);
+        }
+
+        /* ===== COMPANY CARD ===== */
+        .company-card {
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .company-card:last-child {
+            border-bottom: none;
+        }
+
+        .company-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--warm-gold);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .company-card:hover::before {
+            opacity: 1;
+        }
+
+        .company-card:hover {
+            background: var(--warm-gold-dim);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            border-color: var(--border-hover);
+        }
+
+        .company-card.expanded {
+            background: var(--charcoal-light);
+            padding: 28px 28px 32px;
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--warm-gold-bright);
+        }
+
+        .company-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .company-logo {
+            width: 44px;
+            height: 44px;
+            background: var(--charcoal-light);
+            border: 1px solid rgba(201, 168, 76, 0.12);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--warm-gold);
+            flex-shrink: 0;
+            transition: all 0.4s ease;
+        }
+
+        .company-card:hover .company-logo {
+            border-color: rgba(201, 168, 76, 0.3);
+            background: rgba(201, 168, 76, 0.05);
+            transform: scale(1.05);
+        }
+
+        .company-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--white);
+            transition: color 0.3s ease;
+        }
+
+        .company-card:hover .company-name {
+            color: var(--warm-gold);
+        }
+
+        .company-summary {
+            font-size: 0.78rem;
+            font-weight: 300;
+            color: var(--white-dim);
+            line-height: 1.6;
+            margin-top: 12px;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.4s ease,
+                        margin-top 0.4s ease;
+        }
+
+        .company-card:hover .company-summary,
+        .company-card.expanded .company-summary {
+            max-height: 80px;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        .company-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 0;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.1s,
+                        opacity 0.4s ease 0.1s,
+                        margin-top 0.4s ease 0.1s;
+        }
+
+        .company-card.expanded .company-actions {
+            max-height: 60px;
+            opacity: 1;
+            margin-top: 16px;
+        }
+
+        .discuss-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border: 1px solid rgba(201, 168, 76, 0.25);
+            color: var(--warm-gold);
+            text-decoration: none;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            white-space: nowrap;
+            background: transparent;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .discuss-btn:hover {
+            background: var(--warm-gold);
+            color: var(--charcoal);
+            border-color: var(--warm-gold);
+            gap: 12px;
+        }
+
+        .discuss-btn svg {
+            width: 11px;
+            height: 11px;
+            transition: transform 0.3s ease;
+        }
+
+        .discuss-btn:hover svg {
+            transform: translateX(3px);
+        }
+
+        .expand-indicator {
+            position: absolute;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .company-card:hover .expand-indicator {
+            opacity: 0.4;
+        }
+
+        .expand-indicator svg {
+            width: 10px;
+            height: 10px;
+            stroke: var(--warm-gold);
+            stroke-width: 1.5;
+            fill: none;
+            transition: transform 0.3s ease;
+        }
+
+        .company-card.expanded .expand-indicator svg {
+            transform: rotate(180deg);
+        }
+
+        /* ===== EXPANDED DETAIL PANEL ===== */
+        .company-detail {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.4s ease,
+                        margin-top 0.4s ease;
+        }
+
+        .company-card.expanded .company-detail {
+            max-height: 300px;
+            opacity: 1;
+            margin-top: 20px;
+        }
+
+        .company-detail-inner {
+            padding: 20px;
+            background: rgba(201, 168, 76, 0.03);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+        }
+
+        .company-detail-inner h4 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--slate);
+            margin-bottom: 12px;
+        }
+
+        .company-detail-inner p {
+            font-size: 0.82rem;
+            font-weight: 300;
+            color: var(--white-dim);
+            line-height: 1.65;
+            margin-bottom: 16px;
+        }
+
+        .company-detail-inner .detail-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .detail-tag {
+            padding: 5px 12px;
+            border: 1px solid rgba(201, 168, 76, 0.15);
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: var(--slate);
+            letter-spacing: 0.05em;
+            background: rgba(201, 168, 76, 0.02);
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        .contact-section {
+            padding: 100px 48px;
+            border-top: 1px solid var(--border-subtle);
+            text-align: center;
+            background: linear-gradient(180deg, var(--charcoal-mid) 0%, #080808 100%);
+        }
+
+        .contact-section .section-label {
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.45em;
+            text-transform: uppercase;
+            color: var(--warm-gold);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .contact-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 300;
+            margin-bottom: 16px;
+        }
+
+        .contact-section p {
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: var(--white-dim);
+            max-width: 440px;
+            margin: 0 auto 36px;
+            line-height: 1.7;
+        }
+
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 36px;
+            background: var(--warm-gold);
+            color: var(--charcoal);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .contact-btn:hover {
+            background: var(--white);
+            gap: 16px;
+        }
+
+        .contact-btn svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 48px 48px 36px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .footer-brand svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .footer-brand span {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .footer-tagline {
+            font-size: 0.75rem;
+            font-weight: 300;
+            color: var(--slate);
+            max-width: 260px;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 48px;
+        }
+
+        .footer-col h4 {
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--slate);
+            margin-bottom: 14px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 300;
+            color: var(--white-dim);
+            text-decoration: none;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col a:hover {
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-bottom p {
+            font-size: 0.68rem;
+            color: var(--slate);
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-legal a {
+            font-size: 0.68rem;
+            color: var(--slate);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-legal a:hover {
+            color: var(--white);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1100px) {
+            .ecosystem-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .ecosystem-column {
+                grid-column: span 2;
+            }
+            .ecosystem-column.energy,
+            .ecosystem-column.property {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 900px) {
+            nav {
+                padding: 18px 24px;
+            }
+            .nav-links {
+                display: none;
+            }
+            .ecosystem {
+                padding: 0 24px 80px;
+            }
+            .ecosystem-grid {
+                grid-template-columns: 1fr;
+            }
+            .ecosystem-column,
+            .ecosystem-column.energy,
+            .ecosystem-column.property {
+                grid-column: auto;
+            }
+            .company-card {
+                padding: 20px 24px;
+            }
+            .footer-content {
+                flex-direction: column;
+                gap: 32px;
+            }
+            .footer-links {
+                flex-wrap: wrap;
+                gap: 28px;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                gap: 14px;
+                text-align: center;
+            }
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== CINEMATIC OPENING SEQUENCE ===== -->
+    <div class="opening-sequence" id="openingSequence">
+
+        <!-- Stage 1: Logo -->
+        <div class="seq-logo" id="seqLogo">
+            <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M36 4L66 22V50L36 68L6 50V22L36 4Z" stroke="#c9a84c" stroke-width="1.2" fill="none"/>
+                <path d="M36 16L54 27V49L36 60L18 49V27L36 16Z" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.4"/>
+                <circle cx="36" cy="38" r="5" fill="#c9a84c" opacity="0.7"/>
+            </svg>
+            <div class="seq-logo-text">Santa Monica</div>
+        </div>
+
+        <!-- Stage 2: Mission -->
+        <div class="seq-mission" id="seqMission">
+            <p>We build enduring value by partnering with exceptional businesses across Africa's most strategic industries.</p>
+        </div>
+
+        <!-- Stage 3: Industries Assembling -->
+        <div class="seq-industries" id="seqIndustries">
+            <div class="seq-industry" id="seqInd1">
+                <div class="seq-industry-name">Mining</div>
+                <div class="seq-companies">
+                    <span class="seq-company-tag">Masimong Mining</span>
+                </div>
+            </div>
+            <div class="seq-industry" id="seqInd2">
+                <div class="seq-industry-name">Financial Services</div>
+                <div class="seq-companies">
+                    <span class="seq-company-tag">PSG Group</span>
+                </div>
+            </div>
+            <div class="seq-industry" id="seqInd3">
+                <div class="seq-industry-name">Healthcare</div>
+                <div class="seq-companies">
+                    <span class="seq-company-tag">Remgro Healthcare</span>
+                </div>
+            </div>
+            <div class="seq-industry" id="seqInd4">
+                <div class="seq-industry-name">Energy</div>
+                <div class="seq-companies">
+                    <span class="seq-company-tag">Phembani Energy</span>
+                </div>
+            </div>
+            <div class="seq-industry" id="seqInd5">
+                <div class="seq-industry-name">Property</div>
+                <div class="seq-companies">
+                    <span class="seq-company-tag">Strategic Property</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN SITE ===== -->
+    <div class="main-site" id="mainSite">
+
+        <!-- Navigation -->
+        <nav id="navbar">
+            <a href="#" class="nav-logo">
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 2L28 11V25L16 30L4 25V11L16 2Z" stroke="#c9a84c" stroke-width="1" fill="none"/>
+                    <circle cx="16" cy="17" r="2.5" fill="#c9a84c" opacity="0.7"/>
+                </svg>
+                <span>Santa Monica</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#ecosystem">Portfolio</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#leadership">Leadership</a></li>
+                <li><a href="#investors">Investors</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="#contact" class="nav-cta">Investor Relations</a>
+        </nav>
+
+        <!-- About Section -->
+        <section class="ecosystem" id="about" style="padding-top: 120px; min-height: auto;">
+            <div class="ecosystem-header reveal">
+                <span class="section-label">Investment Philosophy</span>
+                <h2>BUILDING ENDURING VALUE</h2>
+                <p style="max-width: 800px; margin: 0 auto; color: var(--white-dim); font-size: 1.1rem; line-height: 1.8; font-family: 'Cormorant Garamond', serif; font-style: italic;">
+                    We partner with exceptional management teams across Africa's most strategic industries, providing disciplined, long-term capital to drive sustainable growth and economic transformation.
+                </p>
+            </div>
+        </section>
+
+        <!-- Investment Ecosystem Dashboard -->
+        <section class="ecosystem" id="ecosystem" style="padding-top: 80px;">
+            <div class="ecosystem-header reveal">
+                <span class="section-label">Santa Monica Group</span>
+                <h2>OUR INVESTMENT ECOSYSTEM</h2>
+            </div>
+
+            <div class="ecosystem-grid reveal">
+                <!-- Row 1, Column 1: Mining -->
+                <div class="ecosystem-column">
+                    <div class="column-header">
+                        <h3>Mining</h3>
+                        <div class="column-line"></div>
+                    </div>
+
+                    <div class="company-card" data-company="masimong-mining" role="button" tabindex="0" aria-expanded="false">
+                        <div class="company-top">
+                            <div class="company-logo">M</div>
+                            <div class="company-name">Masimong Mining</div>
+                            <div class="expand-indicator">
+                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                            </div>
+                        </div>
+                        <div class="company-summary">
+                            Strategic coal and base metal assets contributing to Africa's industrial backbone.
+                        </div>
+                        <div class="company-detail">
+                            <div class="company-detail-inner">
+                                <h4>Investment Thesis</h4>
+                                <p>Masimong Mining focuses on high-yield extraction and sustainable resource management, playing a critical role in the continent's energy and industrial supply chains.</p>
+                                <div class="detail-tags">
+                                    <span class="detail-tag">Coal</span>
+                                    <span class="detail-tag">Base Metals</span>
+                                    <span class="detail-tag">BBBEE</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 1, Column 2: Financial Services -->
+                <div class="ecosystem-column">
+                    <div class="column-header">
+                        <h3>Financial Services</h3>
+                        <div class="column-line"></div>
+                    </div>
+
+                    <div class="company-card" data-company="psg-financial" role="button" tabindex="0" aria-expanded="false">
+                        <div class="company-top">
+                            <div class="company-logo">P</div>
+                            <div class="company-name">PSG Group</div>
+                            <div class="expand-indicator">
+                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                            </div>
+                        </div>
+                        <div class="company-summary">
+                            Financial services and private equity holdings across sub-Saharan Africa.
+                        </div>
+                        <div class="company-detail">
+                            <div class="company-detail-inner">
+                                <h4>Investment Thesis</h4>
+                                <p>PSG Group delivers value through entrepreneurial excellence in banking, education, and specialized financial services.</p>
+                                <div class="detail-tags">
+                                    <span class="detail-tag">Banking</span>
+                                    <span class="detail-tag">Education</span>
+                                    <span class="detail-tag">Private Equity</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 1, Column 3: Healthcare -->
+                <div class="ecosystem-column">
+                    <div class="column-header">
+                        <h3>Healthcare</h3>
+                        <div class="column-line"></div>
+                    </div>
+
+                    <div class="company-card" data-company="remgro-healthcare" role="button" tabindex="0" aria-expanded="false">
+                        <div class="company-top">
+                            <div class="company-logo">R</div>
+                            <div class="company-name">Remgro Healthcare</div>
+                            <div class="expand-indicator">
+                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                            </div>
+                        </div>
+                        <div class="company-summary">
+                            Premier healthcare infrastructure and medical services across the region.
+                        </div>
+                        <div class="company-detail">
+                            <div class="company-detail-inner">
+                                <h4>Investment Thesis</h4>
+                                <p>Focusing on world-class medical facilities and accessible healthcare solutions to meet the growing demands of Africa's population.</p>
+                                <div class="detail-tags">
+                                    <span class="detail-tag">Mediclinic</span>
+                                    <span class="detail-tag">Pharma</span>
+                                    <span class="detail-tag">Services</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2, Column 1: Energy -->
+                <div class="ecosystem-column energy">
+                    <div class="column-header">
+                        <h3>Energy</h3>
+                        <div class="column-line"></div>
+                    </div>
+
+                    <div class="company-card" data-company="phembani-energy" role="button" tabindex="0" aria-expanded="false">
+                        <div class="company-top">
+                            <div class="company-logo">Ph</div>
+                            <div class="company-name">Phembani Energy</div>
+                            <div class="expand-indicator">
+                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                            </div>
+                        </div>
+                        <div class="company-summary">
+                            Diversified energy portfolio focusing on transition and sustainable infrastructure.
+                        </div>
+                        <div class="company-detail">
+                            <div class="company-detail-inner">
+                                <h4>Investment Thesis</h4>
+                                <p>Driving Africa's energy transition through strategic investments in renewables and efficient traditional energy resources.</p>
+                                <div class="detail-tags">
+                                    <span class="detail-tag">Renewables</span>
+                                    <span class="detail-tag">Infrastructure</span>
+                                    <span class="detail-tag">Gas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2, Column 2: Property -->
+                <div class="ecosystem-column property">
+                    <div class="column-header">
+                        <h3>Property</h3>
+                        <div class="column-line"></div>
+                    </div>
+
+                    <div class="company-card" data-company="strategic-property" role="button" tabindex="0" aria-expanded="false">
+                        <div class="company-top">
+                            <div class="company-logo">S</div>
+                            <div class="company-name">Strategic Property</div>
+                            <div class="expand-indicator">
+                                <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4"/></svg>
+                            </div>
+                        </div>
+                        <div class="company-summary">
+                            Commercial and industrial real estate portfolio in high-growth nodes.
+                        </div>
+                        <div class="company-detail">
+                            <div class="company-detail-inner">
+                                <h4>Investment Thesis</h4>
+                                <p>Capturing value through long-term ownership of premium commercial and logistics assets in strategic African markets.</p>
+                                <div class="detail-tags">
+                                    <span class="detail-tag">Commercial</span>
+                                    <span class="detail-tag">Logistics</span>
+                                    <span class="detail-tag">Development</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leadership Section -->
+        <section class="ecosystem" id="leadership" style="padding-top: 100px;">
+            <div class="ecosystem-header reveal">
+                <span class="section-label">Executive Leadership</span>
+                <h2>STRATEGIC GUIDANCE</h2>
+                <p style="max-width: 700px; margin: 0 auto; color: var(--slate); font-size: 0.9rem; line-height: 1.7;">
+                    Our leadership team combines decades of experience in African private equity, operational management, and strategic capital allocation to guide our portfolio companies towards long-term success.
+                </p>
+            </div>
+        </section>
+
+        <!-- Investors Section -->
+        <section class="ecosystem" id="investors" style="padding-top: 100px;">
+            <div class="ecosystem-header reveal">
+                <span class="section-label">Investor Relations</span>
+                <h2>TRANSPARENCY & GROWTH</h2>
+                <p style="max-width: 700px; margin: 0 auto; color: var(--slate); font-size: 0.9rem; line-height: 1.7;">
+                    We are committed to delivering superior risk-adjusted returns to our shareholders while maintaining the highest standards of corporate governance and transparent reporting.
+                </p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section" id="contact">
+            <span class="section-label">Connect With Us</span>
+            <h2>Contact the Investment Team</h2>
+            <p>We welcome enquiries from institutional investors, strategic partners, and management teams seeking capital partnership.</p>
+            <a href="mailto:investors@santamonicagroup.com" class="contact-btn">
+                Get in Touch
+                <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M1 7h12M8 2l5 5-5 5"/>
+                </svg>
+            </a>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div>
+                    <div class="footer-brand">
+                        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14 2L24 9V21L14 26L4 21V9L14 2Z" stroke="#c9a84c" stroke-width="0.8" fill="none"/>
+                            <circle cx="14" cy="15" r="2" fill="#c9a84c" opacity="0.5"/>
+                        </svg>
+                        <span>Santa Monica</span>
+                    </div>
+                    <p class="footer-tagline">Building enduring value across Africa's key industries since 1998.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <h4>Company</h4>
+                        <a href="#">About Us</a>
+                        <a href="#">Leadership</a>
+                        <a href="#">Our History</a>
+                        <a href="#">Careers</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Investors</h4>
+                        <a href="#">Annual Reports</a>
+                        <a href="#">Share Price</a>
+                        <a href="#">Dividends</a>
+                        <a href="#">AGM Information</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Portfolio</h4>
+                        <a href="#">Mining & Resources</a>
+                        <a href="#">Financial Services</a>
+                        <a href="#">Energy & Infrastructure</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Contact</h4>
+                        <a href="#">General Enquiries</a>
+                        <a href="#">Media Relations</a>
+                        <a href="#">Investor Relations</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Santa Monica Group Limited. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // ===== CINEMATIC SEQUENCE =====
+        const seqLogo = document.getElementById('seqLogo');
+        const seqMission = document.getElementById('seqMission');
+        const seqIndustries = document.getElementById('seqIndustries');
+        const openingSequence = document.getElementById('openingSequence');
+        const mainSite = document.getElementById('mainSite');
+
+        // Stage 1: Logo appears (0ms)
+        setTimeout(() => {
+            seqLogo.classList.add('active');
+        }, 300);
+
+        // Stage 2: Logo fades, mission appears (2400ms) - Adjusted to allow logo animation (1.8s) to complete
+        setTimeout(() => {
+            seqLogo.style.opacity = '0';
+            seqLogo.style.transition = 'opacity 0.6s ease';
+            seqMission.classList.add('active');
+        }, 2400);
+
+        // Stage 3: Mission fades, industries assemble (4400ms)
+        setTimeout(() => {
+            seqMission.style.opacity = '0';
+            seqMission.style.transition = 'opacity 0.6s ease';
+            seqIndustries.classList.add('active');
+        }, 4400);
+
+        // Industries expand one by one
+        const industries = [
+            document.getElementById('seqInd1'),
+            document.getElementById('seqInd2'),
+            document.getElementById('seqInd3'),
+            document.getElementById('seqInd4'),
+            document.getElementById('seqInd5')
+        ];
+
+        industries.forEach((ind, i) => {
+            setTimeout(() => {
+                ind.classList.add('open');
+            }, 4800 + (i * 400));
+        });
+
+        // Sequence completes (7800ms)
+        setTimeout(() => {
+            openingSequence.classList.add('complete');
+            mainSite.classList.add('visible');
+        }, 7800);
+
+        // ===== NAVBAR SCROLL =====
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        // ===== SCROLL REVEAL =====
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // ===== SMOOTH SCROLL =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ===== COMPANY CARD EXPAND =====
+        function toggleCard(card) {
+            const isExpanded = card.classList.contains('expanded');
+
+            // Close all other cards
+            document.querySelectorAll('.company-card.expanded').forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('expanded');
+                    c.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Toggle current
+            const newState = !isExpanded;
+            card.classList.toggle('expanded', newState);
+            card.setAttribute('aria-expanded', newState ? 'true' : 'false');
+        }
+
+        document.querySelectorAll('.company-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Don't expand if clicking the discuss button
+                if (e.target.closest('.discuss-btn')) return;
+                toggleCard(this);
+            });
+
+            card.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleCard(this);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
