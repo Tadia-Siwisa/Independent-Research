@@ -1,0 +1,500 @@
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .company-card:last-child {
+            border-bottom: none;
+        }
+
+        .company-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--warm-gold);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .company-card:hover::before {
+            opacity: 1;
+        }
+
+        .company-card:hover {
+            background: var(--warm-gold-dim);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            border-color: var(--border-hover);
+        }
+
+        .company-card.expanded {
+            background: var(--charcoal-light);
+            padding: 28px 28px 32px;
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--warm-gold-bright);
+        }
+
+        .company-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .company-logo {
+            width: 44px;
+            height: 44px;
+            background: var(--charcoal-light);
+            border: 1px solid rgba(201, 168, 76, 0.12);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--warm-gold);
+            flex-shrink: 0;
+            transition: all 0.4s ease;
+        }
+
+        .company-card:hover .company-logo {
+            border-color: rgba(201, 168, 76, 0.3);
+            background: rgba(201, 168, 76, 0.05);
+            transform: scale(1.05);
+        }
+
+        .company-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--white);
+            transition: color 0.3s ease;
+        }
+
+        .company-card:hover .company-name {
+            color: var(--warm-gold);
+        }
+
+        .company-summary {
+            font-size: 0.78rem;
+            font-weight: 300;
+            color: var(--white-dim);
+            line-height: 1.6;
+            margin-top: 12px;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.4s ease,
+                        margin-top 0.4s ease;
+        }
+
+        .company-card:hover .company-summary,
+        .company-card.expanded .company-summary {
+            max-height: 80px;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        .company-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 0;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.1s,
+                        opacity 0.4s ease 0.1s,
+                        margin-top 0.4s ease 0.1s;
+        }
+
+        .company-card.expanded .company-actions {
+            max-height: 60px;
+            opacity: 1;
+            margin-top: 16px;
+        }
+
+        .discuss-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border: 1px solid rgba(201, 168, 76, 0.25);
+            color: var(--warm-gold);
+            text-decoration: none;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            white-space: nowrap;
+            background: transparent;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .discuss-btn:hover {
+            background: var(--warm-gold);
+            color: var(--charcoal);
+            border-color: var(--warm-gold);
+            gap: 12px;
+        }
+
+        .discuss-btn svg {
+            width: 11px;
+            height: 11px;
+            transition: transform 0.3s ease;
+        }
+
+        .discuss-btn:hover svg {
+            transform: translateX(3px);
+        }
+
+        .expand-indicator {
+            position: absolute;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .company-card:hover .expand-indicator {
+            opacity: 0.4;
+        }
+
+        .expand-indicator svg {
+            width: 10px;
+            height: 10px;
+            stroke: var(--warm-gold);
+            stroke-width: 1.5;
+            fill: none;
+            transition: transform 0.3s ease;
+        }
+
+        .company-card.expanded .expand-indicator svg {
+            transform: rotate(180deg);
+        }
+
+        /* ===== EXPANDED DETAIL PANEL ===== */
+        .company-detail {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.4s ease,
+                        margin-top 0.4s ease;
+        }
+
+        .company-card.expanded .company-detail {
+            max-height: 300px;
+            opacity: 1;
+            margin-top: 20px;
+        }
+
+        .company-detail-inner {
+            padding: 20px;
+            background: rgba(201, 168, 76, 0.03);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+        }
+
+        .company-detail-inner h4 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--slate);
+            margin-bottom: 12px;
+        }
+
+        .company-detail-inner p {
+            font-size: 0.82rem;
+            font-weight: 300;
+            color: var(--white-dim);
+            line-height: 1.65;
+            margin-bottom: 16px;
+        }
+
+        .company-detail-inner .detail-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .detail-tag {
+            padding: 5px 12px;
+            border: 1px solid rgba(201, 168, 76, 0.15);
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: var(--slate);
+            letter-spacing: 0.05em;
+            background: rgba(201, 168, 76, 0.02);
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        .contact-section {
+            padding: 100px 48px;
+            border-top: 1px solid var(--border-subtle);
+            text-align: center;
+            background: linear-gradient(180deg, var(--charcoal-mid) 0%, #080808 100%);
+        }
+
+        .contact-section .section-label {
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.45em;
+            text-transform: uppercase;
+            color: var(--warm-gold);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .contact-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 300;
+            margin-bottom: 16px;
+        }
+
+        .contact-section p {
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: var(--white-dim);
+            max-width: 440px;
+            margin: 0 auto 36px;
+            line-height: 1.7;
+        }
+
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 36px;
+            background: var(--warm-gold);
+            color: var(--charcoal);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .contact-btn:hover {
+            background: var(--white);
+            gap: 16px;
+        }
+
+        .contact-btn svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 48px 48px 36px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .footer-brand svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .footer-brand span {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .footer-tagline {
+            font-size: 0.75rem;
+            font-weight: 300;
+            color: var(--slate);
+            max-width: 260px;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 48px;
+        }
+
+        .footer-col h4 {
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--slate);
+            margin-bottom: 14px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 300;
+            color: var(--white-dim);
+            text-decoration: none;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col a:hover {
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-bottom p {
+            font-size: 0.68rem;
+            color: var(--slate);
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-legal a {
+            font-size: 0.68rem;
+            color: var(--slate);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-legal a:hover {
+            color: var(--white);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1100px) {
+            .ecosystem-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .ecosystem-column {
+                grid-column: span 2;
+            }
+            .ecosystem-column.energy,
+            .ecosystem-column.property {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 900px) {
+            nav {
+                padding: 18px 24px;
+            }
+            .nav-links {
+                display: none;
+            }
+            .ecosystem {
+                padding: 0 24px 80px;
+            }
+            .ecosystem-grid {
+                grid-template-columns: 1fr;
+            }
+            .ecosystem-column,
+            .ecosystem-column.energy,
+            .ecosystem-column.property {
+                grid-column: auto;
+            }
+            .company-card {
+                padding: 20px 24px;
+            }
+            .footer-content {
+                flex-direction: column;
+                gap: 32px;
+            }
+            .footer-links {
+                flex-wrap: wrap;
+                gap: 28px;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                gap: 14px;
+                text-align: center;
+            }
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== CINEMATIC OPENING SEQUENCE ===== -->
+    <div class="opening-sequence" id="openingSequence">
+
+        <!-- Stage 1: Logo -->
+        <div class="seq-logo" id="seqLogo">
+            <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M36 4L66 22V50L36 68L6 50V22L36 4Z" stroke="#c9a84c" stroke-width="1.2" fill="none"/>
+                <path d="M36 16L54 27V49L36 60L18 49V27L36 16Z" stroke="#c9a84c" stroke-width="0.8" fill="none" opacity="0.4"/>
+                <circle cx="36" cy="38" r="5" fill="#c9a84c" opacity="0.7"/>
+            </svg>
+            <div class="seq-logo-text">Santa Monica</div>
+        </div>
+
+        <!-- Stage 2: Mission -->
+        <div class="seq-mission" id="seqMission">
+            <p>We build enduring value by partnering with exceptional businesses across Africa's most strategic industries.</p>
+        </div>
+
+        <!-- Stage 3: Industries Assembling -->
+        <div class="seq-industries" id="seqIndustries">
+            <div class="seq-industry" id="seqInd1">
+                <div class="seq-industry-name">Mining</div>
+                <div class="seq-companies">
+                    <span class="seq-company-tag">Masimong Mining</span>
